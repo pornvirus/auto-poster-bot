@@ -1,5 +1,4 @@
-import os, db, time, asyncio, random, shutil
-from pySmartDL import SmartDL
+import os, db, time, asyncio, random
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from pyrogram.types import InputMediaPhoto, InputMediaVideo, InputMediaAudio, InputMediaDocument
@@ -7,10 +6,10 @@ from pyrogram.errors import FloodWait
 
 # Configs
 API_HASH = os.environ['API_HASH']
-APP_ID = int(os.environ['APP_ID'])
+APP_ID = int(os.environ['API_ID'])
 BOT_TOKEN = os.environ['BOT_TOKEN']
 CHANNEL_ID = int(os.environ['CHANNEL_ID'])
-OWNER_ID = os.environ['OWNER_ID']
+OWNER_ID = int(os.environ['OWNER_ID'])
 GAP = [1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2, 2, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 3]
 
 #Button
@@ -35,6 +34,7 @@ async def _start(bot, update):
         return await update.reply('Only the owner can use this bot!\n\nCredit: @PayYourBot', True, reply_markup=InlineKeyboardMarkup(START_BUTTONS))
     await update.reply(f"Hi. Send media (photo / video / audio / document) and you're ready to go.\n\nCredit: @PayYourBot", True, reply_markup=InlineKeyboardMarkup(START_BUTTONS))
 
+    
 # Store media to database
 @xbot.on_message(filters.media & filters.private)
 async def _media(bot, update):
@@ -57,9 +57,9 @@ async def _media(bot, update):
         idx = update.video.file_id
     elif update.photo:
         idx = update.photo.file_id
-    elif check.audio:
+    elif update.audio:
         idx = update.audio.file_id
-    elif check.document:
+    elif update.document:
         idx = update.document.file_id
     if not await db.is_user_exist(update.from_user.id):
         await db.add_user(update.from_user.id)
@@ -71,7 +71,8 @@ async def _media(bot, update):
     await db.add_media(update.from_user.id, f'{dbx["medias"]}|{idx}')
     await update.delete()
 
-@xbot.on_message(filters.regex('http') & filters.private)
+
+@xbot.on_message(filters.regex(pattern='.*http.*') & filters.private)
 async def _urls(bot, update):
     dbx = await db.get_user(update.from_user.id)
     if dbx['limit'] == 'on':
@@ -79,21 +80,16 @@ async def _urls(bot, update):
         await db.limit_off(update.from_user.id)
     else:
         await db.limit_on(update.from_user.id)
-    await update.delete()
     if not await db.is_user_exist(update.from_user.id):
         await db.add_user(update.from_user.id)
     if update.from_user.id != OWNER_ID:
         return
     url = update.text
-    os.mkdir('./Downloads.')
-    dest = './Downloads/'
-    obj = SmartDL(url, dest)
-    path = obj.get_dest()
     if dbx['medias'] == '':
-        await db.add_media(update.from_user.id, path)
+        await db.add_media(update.from_user.id, url)
         await update.delete()
         return
-    await db.add_media(update.from_user.id, f'{dbx["medias"]}|{path}')
+    await db.add_media(update.from_user.id, f'{dbx["medias"]}|{url}')
     await update.delete()
     
 
@@ -145,19 +141,10 @@ async def buttons(bot, update):
                 await asyncio.sleep(e.x)
                 await bot.send_media_group(chat_id=CHANNEL_ID, media=media, disable_notification=True)
                 time.sleep(3)
-            except ValueError:
-                await update.message.reply('You selected wrong button or maybe you sended two different file type. i\'ll remove all stored files.')
+            except ValueError as e:
+                await update.message.reply(f'You selected wrong button or maybe you sended two different file type. i\'ll remove all stored files.\n\n{e}')
                 await db.remove_all_media(update.from_user.id)
-                try:
-                    shutil.rmtree('./Downloads/')
-                except:
-                    return
-                return
             await db.remove_all_media(update.from_user.id)
-            try:
-                shutil.rmtree('./Downloads/')
-            except:
-                return
     elif cb == 'video':
         videos = dbx['medias'].split('|')
         for i in range(0, len(videos), 10):
@@ -175,16 +162,7 @@ async def buttons(bot, update):
             except ValueError:
                 await update.message.reply('You selected wrong button or maybe you sended two different file type. i\'ll remove all stored files.')
                 await db.remove_all_media(update.from_user.id)
-                try:
-                    shutil.rmtree('./Downloads/')
-                except:
-                    return
-                return
             await db.remove_all_media(update.from_user.id)
-            try:
-                shutil.rmtree('./Downloads/')
-            except:
-                return
     elif cb == 'audio':
         audios = dbx['medias'].split('|')
         for i in range(0, len(audios), 10):
@@ -202,16 +180,7 @@ async def buttons(bot, update):
             except ValueError:
                 await update.message.reply('You selected wrong button or maybe you sended two different file type. i\'ll remove all stored files.')
                 await db.remove_all_media(update.from_user.id)
-                try:
-                    shutil.rmtree('./Downloads/')
-                except:
-                    return
-                return
             await db.remove_all_media(update.from_user.id)
-            try:
-                shutil.rmtree('./Downloads/')
-            except:
-                return
     elif cb == 'document':
         documents = dbx['medias'].split('|')
         for i in range(0, len(documents), 10):
@@ -229,16 +198,7 @@ async def buttons(bot, update):
             except ValueError:
                 await update.message.reply('You selected wrong button or maybe you sended two different file type. i\'ll remove all stored files.')
                 await db.remove_all_media(update.from_user.id)
-                try:
-                    shutil.rmtree('./Downloads/')
-                except:
-                    return
-                return
             await db.remove_all_media(update.from_user.id)
-            try:
-                shutil.rmtree('./Downloads/')
-            except:
-                return
 
 
 xbot.run()
