@@ -1,0 +1,49 @@
+{
+    "name": "Channel-Autopost",
+    "description": "Autopost media group such as photo, video, audio, document",
+    "keywords": [
+        "telegram",
+        "channel",
+        "bot"
+    ],
+    "repository": "https://github.com/X-Gorn",
+    "website": "https://t.me/PayYourBot",
+    "success_url": "https://t.me/PayYourBot",
+    "env": {
+        "API_ID": {
+            "description": "Get from my.telegram.org or @TeleORG_Bot",
+            "value": "123456"
+        },
+        "API_HASH": {
+            "description": "Get from my.telegram.org or @TeleORG_Bot",
+            "value": "abcdfeghijk"
+        },
+        "BOT_TOKEN": {
+            "description": "Create a bot from @BotFather and get the bot token.",
+            "value": "18263nnnnnnnIjl973lwcfifiLYOKwqc-HK7Lk"
+        },
+        "CHANNEL_ID": {
+            "description": "Your channel id. Watch https://youtube.com/shorts/nFDUBIak6DI and paste your channel id here (where to post your media group files). don't forget to add your bot as administrator in your channel.",
+            "value": "-100"
+        },
+        "OWNER_ID": {
+            "description": "Your telegram id. go to @missrose_bot and type /id and paste your id here",
+            "value": "123456789"
+        },
+        "MONGO_DB_URI": {
+            "description": "Your MongoDB URL. Watch https://youtu.be/0aYrJTfYBHU and paste your mongodb url here",
+            "value": "mongodb+srv://"
+        }
+    },
+    "buildpacks": [
+        {
+            "url": "heroku/python"
+        }
+    ],
+    "formation": {
+        "worker": {
+            "quantity": 1,
+            "size": "free"
+        }
+    }
+}
