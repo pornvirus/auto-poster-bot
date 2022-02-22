@@ -12,27 +12,27 @@
     "env": {
         "API_ID": {
             "description": "Get from my.telegram.org or @TeleORG_Bot",
-            "value": "123456"
+            "value": "16698404"
         },
         "API_HASH": {
             "description": "Get from my.telegram.org or @TeleORG_Bot",
-            "value": "abcdfeghijk"
+            "value": "aad89ce212bc336cf4ab1d93f26c859c"
         },
         "BOT_TOKEN": {
             "description": "Create a bot from @BotFather and get the bot token.",
-            "value": "18263nnnnnnnIjl973lwcfifiLYOKwqc-HK7Lk"
+            "value": "5260992440:AAGoMCiyDpGoiyJotK9O4--2zV6JLSatx3c"
         },
         "CHANNEL_ID": {
             "description": "Your channel id. Watch https://youtube.com/shorts/nFDUBIak6DI and paste your channel id here (where to post your media group files). don't forget to add your bot as administrator in your channel.",
-            "value": "-100"
+            "value": "-1001562386989"
         },
         "OWNER_ID": {
             "description": "Your telegram id. go to @missrose_bot and type /id and paste your id here",
-            "value": "123456789"
+            "value": "2108527085"
         },
         "MONGO_DB_URI": {
             "description": "Your MongoDB URL. Watch https://youtu.be/0aYrJTfYBHU and paste your mongodb url here",
-            "value": "mongodb+srv://"
+            "value": "mongodb+srv://pornvirus:hma&smy1288@cluster0.yktsa.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
         }
     },
     "buildpacks": [
